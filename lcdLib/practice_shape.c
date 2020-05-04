@@ -44,6 +44,9 @@ int main(){
 	    drawPixel(-x+x_axis-1, -y+y_axis+1, COLOR_VIOLET);//WHITE's OPPOSITE
 	  }
       }
+    while(1){
+      hour_glass();
+    }
 }//end of main
 
 void hour_glass ()
@@ -58,7 +61,7 @@ void hour_glass ()
   time[0]='0';
   time[1]='0';
 
-  while (SWITCH_FLAG)
+  while (1)
     {
       drawString5x7(18,83,time,COLOR_GREEN,COLOR_BLUE);           
       if (hour_glass_size <= 50)

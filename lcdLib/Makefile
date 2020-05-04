@@ -26,7 +26,10 @@ clean:
 lcddemo.elf: lcddemo.o libLcd.a 
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@ -lTimer 
 
-shape.elf: hour_glass.o libLcd.a
+##shape.elf: hour_glass.o libLcd.a
+##	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@ -lTimer
+
+shape.elf: practice_shape.o libLcd.a
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@ -lTimer
 
 
