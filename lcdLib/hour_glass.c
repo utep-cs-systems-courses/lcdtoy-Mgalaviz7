@@ -1,18 +1,18 @@
-/** \file lcddemo.c
- *  \brief A simple demo that draws a string and square
- */
-
 #include <libTimer.h>
 #include "lcdutils.h"
 #include "lcddraw.h"
 
-/** Initializes everything, clears the screen, draws "hello" and a square */
-int
-main()
-{
+
+int main(){
   configureClocks();
   lcd_init();
-int x,y; 
+  u_char width = screenWidth, height = screenHeight;
+  //  p2sw_init(15);
+  or_sr(0x8);
+  
+  clearScreen(COLOR_BLUE);
+
+ int x,y; 
  int x_axis = 65 ,  y_axis = 80; 
  int hour_glass_size = 20; 
  char time[1]; 
@@ -44,8 +44,9 @@ int x,y;
 	    drawPixel(-x+x_axis-1, -y+y_axis+1, COLOR_VIOLET);//WHITE's OPPOSITE
 	  }
       }
-}
-void hour_glass ()
+}//end of main
+
+void draw_hour_glass ()
 {
 
   int x,y;
@@ -57,7 +58,7 @@ void hour_glass ()
   time[0]='0';
   time[1]='0';
 
-  while (SWITCH_FLAG)
+  while (1)
     {
       drawString5x7(18,83,time,COLOR_GREEN,COLOR_BLUE);           
       if (hour_glass_size <= 50)

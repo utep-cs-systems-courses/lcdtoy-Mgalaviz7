@@ -17,15 +17,35 @@ void main()
   or_sr(0x8);			/* GIE (enable interrupts) */
   u_char width = screenWidth, height = screenHeight;
 
-  clearScreen(COLOR_BLUE);
+  clearScreen(COLOR_RED);
 
-  drawString5x7(10,10, "switches:", COLOR_GREEN, COLOR_BLUE);
-  while (1) {
-    u_int switches = p2sw_read(), i;
-    char str[5];
-    for (i = 0; i < 4; i++)
-      str[i] = (switches & (1<<i)) ? '-' : '0'+i;
-    str[4] = 0;
-    drawString5x7(20,20, str, COLOR_GREEN, COLOR_BLUE);
-  } 
-}
+  drawString5x7(32,55, "Hello THere:", COLOR_GREEN, COLOR_BLUE);
+  
+  while (1)
+    {
+     u_int switches = p2sw_read(), i;
+     char str[5];
+      for (i = 0; i < 4; i++)
+      {
+	char btn = (switches & (1<<i)) ? '0' : '0'+i;
+	//  str[i] = (switches & (1<<i)) ? '-' : '0'+i;
+	// str[4] = 0;
+	drawString5x7(20,20, str, COLOR_GREEN, COLOR_BLUE);
+	if(btn == 0){
+	  clearScreen(COLOR_RED);
+	}
+	if(btn == 1){
+	  clearScreen(COLOR_GREEN);
+	}
+	if(btn == 2){
+	  clearScreen(COLOR_BLUE);
+	}
+	if(btn == 3){
+	  clearScreen(COLOR_YELLOW);
+	}
+	
+	
+	
+      }
+    }
+}  

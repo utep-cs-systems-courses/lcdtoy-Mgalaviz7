@@ -13,6 +13,7 @@ libLcd.a: font-11x16.o font-5x7.o font-8x12.o lcdutils.o lcddraw.o
 
 lcddraw.o: lcddraw.c lcddraw.h lcdutils.h
 lcdutils.o: lcdutils.c lcdutils.h
+hour_glass.o: hour_glass.c hour_glass.h lcddraw.h lcdutils.h
 
 install: libLcd.a
 	mkdir -p ../h ../lib
@@ -20,10 +21,14 @@ install: libLcd.a
 	cp *.h ../h
 
 clean:
-	rm -f libLcd.a *.o *.elf
+	rm -f libLcd.a *.o *.elf *~ *#
 
 lcddemo.elf: lcddemo.o libLcd.a 
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@ -lTimer 
 
-load: lcddemo.elf
+shape.elf: hour_glass.o libLcd.a
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@ -lTimer
+
+
+load: shape.elf #lcddemo.elf
 	msp430loader.sh $^
