@@ -7,10 +7,87 @@
 #include "state_transition_assembly.h"
 #include "lcdutils.h"
 #include "lcddraw.h"
+
 //#include "hour_glass.h"
 
-int dim_flag = 0;
+int larger_flag = 0;
 char speed = 125;
+
+void draw_hour_glass ()
+{
+
+  int x,y;
+  int x_axis = 65 ,  y_axis = 80;
+  int hour_glass_size = 20;
+  char time[1];
+  char sec,min,time_flag,SWITCH_FLAG =0;
+  
+  time[0]='0';
+  time[1]='0';
+  // Outline of HourGlass
+    for( y = 0; y <= hour_glass_size+5; y++)
+      {
+	for(x=0; x<y+8; x++)
+	  { 
+	    drawPixel(x+x_axis, y+y_axis-1, COLOR_BLACK); 
+	    drawPixel(-x+x_axis-1, y+y_axis-1, COLOR_BLACK);
+	    drawPixel(x+x_axis, -y+y_axis+1, COLOR_BLACK);//RED's OPPOSITE
+	    drawPixel(-x+x_axis-1, -y+y_axis+1, COLOR_BLACK);//WHITE's OPPOSITE
+	  }
+      } 
+    // Inside of HourGlass 
+    for( y = 0; y <= hour_glass_size; y++)
+      { 
+	for(x=0; x<y; x++)
+	  { 
+	    drawPixel(x+x_axis, y+y_axis-1, COLOR_VIOLET);
+	    drawPixel(-x+x_axis-1, y+y_axis-1, COLOR_VIOLET); 
+	    drawPixel(x+x_axis, -y+y_axis+1, COLOR_VIOLET);//RED's OPPOSITE
+	    drawPixel(-x+x_axis-1, -y+y_axis+1, COLOR_VIOLET);//WHITE's OPPOSITE
+	  }
+      }
+
+  while (larger_flag)
+    {
+      drawString5x7(18,83,time,COLOR_GREEN,COLOR_BLUE);           
+      if (hour_glass_size <= 50)
+	{
+	  hour_glass_size += 1;
+	  time[1]='0'+sec;
+	  time[0]='0'+min;
+	  sec = sec +1;
+	  if (sec == 10)
+	    {
+	      sec = 0;
+	      min +=1; 
+	    }
+	} 
+      // Outline of HourGlass
+      for( y = 0; y <= hour_glass_size+5; y++)
+	{
+	  for(x=0; x<y+8; x++)
+	    { 
+	      drawPixel(x+x_axis, y+y_axis-1, COLOR_BLACK); 
+	      drawPixel(-x+x_axis-1, y+y_axis-1, COLOR_BLACK);
+	      drawPixel(x+x_axis, -y+y_axis+1, COLOR_BLACK);//RED's OPPOSITE
+	      drawPixel(-x+x_axis-1, -y+y_axis+1, COLOR_BLACK);//WHITE's OPPOSITE
+	    }
+	} 
+      // Inside of HourGlass 
+      for ( y = 0; y <= hour_glass_size; y++)
+	{ 
+	  for (x=0; x<y; x++)
+	    { 
+	      drawPixel(x+x_axis, y+y_axis-1, COLOR_RED);
+	      drawPixel(-x+x_axis-1, y+y_axis-1, COLOR_VIOLET); 
+	      drawPixel(x+x_axis, -y+y_axis+1, COLOR_GREEN);//RED's OPPOSITE
+	      drawPixel(-x+x_axis-1, -y+y_axis+1, COLOR_YELLOW);//WHITE's OPPOSITE
+	    }
+	}
+    }//end of while loop
+  
+}
+
 
 /*
   This method is always toggled and is used to keep the current state
@@ -31,6 +108,7 @@ states_transition()
       */
     case 0:
       both_leds_off();
+      draw_hour_glass();
       state = 0;
       break;      
       /* STATE_1
@@ -41,7 +119,7 @@ states_transition()
       green_led_on();
       high_note();
       draw_hour_glass();
-      
+      larger_flag=1;
       state = 1;
       break;
       
@@ -81,80 +159,4 @@ states_transition()
       state = 4;
       break;
     }
-}
-
-/*
-  This method is always toggled either when button1 or button2 is pressed. 
-  If button 1 is pressed it counts from 0 to the value 3 in binary rersination.
-  By calling the methods in led.c
-  If button 2 is pressed it trigres the dim flag which essentialy dims the counting to
-  3.
-*/
-void
-count_to_3()
-{
-  static char state = 0;
-  
-  switch (state)
-    {
-      /* Number 0: turn off both leds for binary value of 0 */
-    case 0:
-      both_leds_off();
-      state = 1;
-      break;
-      
-      /* Number 1: turn on red led for binary value of 1 */
-    case 1:
-      if (dim_flag)
-	{
-	  for (int i =0; i<100; i++)
-	    {
-	      red_led_on();
-	      red_led_off();
-	    }
-	}
-      else
-	{
-	  red_led_on();
-	}
-      state = 2;
-      break;
-      
-      /* Number 2: turn on green led for binary value of 2 */
-    case 2:
-      if (dim_flag)
-	{
-	  for (int i =0; i<100; i++)
-	    {
-	      red_led_off();
-	      green_led_on();
-	      green_led_off();
-	    }
-	}
-      else
-	{
-	  red_led_off();
-	  green_led_on();	  
-	}
-      state = 3;
-      break;
-      
-      /* Number 3: turn on both leds for binary value of 3 */
-    case 3:
-      if (dim_flag)
-	{
-	  for (int i =0; i<100; i++)
-	    {
-	      both_leds_on();
-	      both_leds_off();
-	    }
-	}
-      else
-	{
-	  both_leds_on();
-	}
-      state = 0;
-      break;
-    }
-  led_update();
 }
